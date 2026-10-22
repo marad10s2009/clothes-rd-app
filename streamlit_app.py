@@ -141,7 +141,7 @@ with tab_publicar:
         
         imagen_url = st.text_input(
             "URL de la imagen (debe ser un enlace público .jpg o .png)",
-            value="[https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500](https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500)"
+            value="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500"
         )
         
         btn_submit = st.form_submit_button("Publicar en Clothes.RD")
@@ -177,13 +177,21 @@ with tab_publicar:
 # ---------------------------------------------------------
 with tab_cyber:
     st.subheader("Configuración de Promociones")
-    st.info("Utiliza este panel para calcular rápidamente precios con descuentos de temporada antes de subirlos.")
     
-    p_demo = st.number_input("Simulador de Precio (RD$)", value=2000, step=100)
-    desc_demo = st.slider("Descuento Cyber (%)", 5, 80, 25)
+    password_cyber = st.text_input("Ingresa la contraseña de administrador:", type="password")
     
-    precio_con_desc = calcular_precio_final(p_demo, True, desc_demo)
-    ahorro = p_demo - precio_con_desc
-    
-    st.metric("Precio Original", f"RD$ {p_demo:,}")
-    st.metric("Precio con Descuento Cyber", f"RD$ {precio_con_desc:,}", delta=f"-RD$ {ahorro:,}")
+    if password_cyber == "admin123":
+        st.info("Utiliza este panel para calcular rápidamente precios con descuentos de temporada antes de subirlos.")
+        
+        p_demo = st.number_input("Simulador de Precio (RD$)", value=2000, step=100)
+        desc_demo = st.slider("Descuento Cyber (%)", 5, 80, 25)
+        
+        precio_con_desc = calcular_precio_final(p_demo, True, desc_demo)
+        ahorro = p_demo - precio_con_desc
+        
+        st.metric("Precio Original", f"RD$ {p_demo:,}")
+        st.metric("Precio con Descuento Cyber", f"RD$ {precio_con_desc:,}", delta=f"-RD$ {ahorro:,}")
+    elif password_cyber != "":
+        st.error("Contraseña incorrecta.")
+    else:
+        st.info("Ingresa la contraseña para desplegar el panel.")
