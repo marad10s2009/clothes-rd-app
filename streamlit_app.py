@@ -20,10 +20,12 @@ conexion = st.connection("gsheets", type=GSheetsConnection)
 # CLASE 2: FUNCIONES PROPIAS (Mínimo 4 funciones)
 # =========================================================
 
-def validar_datos(vendedor, prenda, imagen_url):
+def validar_datos(vendedor, correo, prenda, imagen_url):
     """Función 1: Valida que los campos de texto obligatorios no estén vacíos."""
     if not vendedor.strip():
         return False, "El nombre del vendedor o tienda no puede estar vacío."
+    if not correo.strip() or "@" not in correo:
+        return False, "Ingresa un correo electrónico válido."
     if not prenda.strip():
         return False, "El nombre de la prenda es obligatorio."
     if not imagen_url.strip() or not imagen_url.startswith("http"):
@@ -107,6 +109,10 @@ with tab_catalogo:
                     st.image(row["Imagen"], use_container_width=True)
                 with col_det:
                     st.markdown(f"### {row['Prenda']}")
+                    
+                    # Obtenemos el correo si existe en la fila
+                    correo_vendedor = row.get("Correo", "No especificado")
+                    
                     st.write(f"**Vendedor:** {row['Vendedor']} | **Categoría:** {row['Categoria']} | **Talla:** {row['Talla']}")
                     
                     # Mostrar precio normal vs oferta
@@ -118,7 +124,7 @@ with tab_catalogo:
                         st.write(f"**Precio:** RD$ {precio_orig:,}")
                     
                     if st.button(f"Comprar {row['Prenda']}", key=f"btn_{idx}"):
-                        st.success(f"¡Has seleccionado comprar **{row['Prenda']}**! Contacta al vendedor: {row['Vendedor']}.")
+                        st.success(f"¡Has seleccionado comprar **{row['Prenda']}**! Contacta al vendedor: {row['Vendedor']} ({correo_vendedor}).")
                 st.divider()
 
 # ---------------------------------------------------------
@@ -130,6 +136,7 @@ with tab_publicar:
     # Formulario agrupado
     with st.form("form_nueva_prenda", clear_on_submit=True):
         vendedor = st.text_input("Nombre de la Tienda / Vendedor")
+        correo = st.text_input("Correo electrónico del vendedor")
         prenda = st.text_input("Nombre de la Prenda (ej. Jacket de Mezclilla)")
         categoria = st.selectbox("Categoría", ["Poleras / Tops", "Pantalones / Jeans", "Vestidos", "Chaquetas", "Calzado", "Accesorios"])
         talla = st.selectbox("Talla", ["XS", "S", "M", "L", "XL", "Única"])
@@ -148,7 +155,7 @@ with tab_publicar:
 
     # Acción de guardado e integración
     if btn_submit:
-        es_valido, mensaje_val = validar_datos(vendedor, prenda, imagen_url)
+        es_valido, mensaje_val = validar_datos(vendedor, correo, prenda, imagen_url)
         if not es_valido:
             st.error(mensaje_val)
         else:
@@ -156,6 +163,7 @@ with tab_publicar:
             
             registro_dict = {
                 "Vendedor": vendedor.strip(),
+                "Correo": correo.strip(),
                 "Prenda": prenda.strip(),
                 "Categoria": categoria,
                 "Talla": talla,
