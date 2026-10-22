@@ -2,23 +2,23 @@ import streamlit as st
 import pandas as pd
 from streamlit_gsheets import GSheetsConnection
 
-# =========================================================
+
 # CONFIGURACIÓN DE LA PÁGINA
-# =========================================================
+
 st.set_page_config(
     page_title="Clothes.RD - Marketplace",
     page_icon="🏷️",
     layout="centered"
 )
 
-# =========================================================
+
 # CONEXIÓN A GOOGLE SHEETS
-# =========================================================
+
 conexion = st.connection("gsheets", type=GSheetsConnection)
 
-# =========================================================
-# CLASE 2: FUNCIONES PROPIAS (Mínimo 4 funciones)
-# =========================================================
+
+# CLASE 2: FUNCIONES PROPIAS 
+
 
 def validar_datos(vendedor, correo, prenda, imagen_url):
     """Función 1: Valida que los campos de texto obligatorios no estén vacíos."""
@@ -60,9 +60,9 @@ def obtener_estadisticas_inventario(df_productos):
     return total_prendas, precio_promedio
 
 
-# =========================================================
-# CLASE 4 & 5: INTERFAZ Y FLUJO PRINCIPAL
-# =========================================================
+
+# CLASE 4 y 5 INTERFAZ Y FLUJO PRINCIPAL
+
 
 st.title("🏷️ Clothes.RD")
 st.write("Plataforma para registrar, gestionar y publicar ropa con ofertas dinámicas Cyber Day.")
@@ -70,9 +70,9 @@ st.write("Plataforma para registrar, gestionar y publicar ropa con ofertas diná
 # Pestañas de la aplicación
 tab_catalogo, tab_publicar, tab_cyber = st.tabs(["🛒 Catálogo", "➕ Publicar Ropa", "⚙️ Panel Cyber"])
 
-# ---------------------------------------------------------
+
 # PESTAÑA 1: CATÁLOGO DE PRODUCTOS
-# ---------------------------------------------------------
+
 with tab_catalogo:
     st.subheader("Catálogo de Productos")
     try:
@@ -127,9 +127,9 @@ with tab_catalogo:
                         st.success(f"¡Has seleccionado comprar **{row['Prenda']}**! Contacta al vendedor: {row['Vendedor']} ({correo_vendedor}).")
                 st.divider()
 
-# ---------------------------------------------------------
+
 # PESTAÑA 2: FORMULARIO DE PUBLICACIÓN
-# ---------------------------------------------------------
+
 with tab_publicar:
     st.subheader("Publica una nueva prenda")
     
@@ -180,9 +180,9 @@ with tab_publicar:
                 except Exception as err:
                     st.error(f"Error al conectar con Google Sheets: {err}")
 
-# ---------------------------------------------------------
+
 # PESTAÑA 3: PANEL CYBER
-# ---------------------------------------------------------
+
 with tab_cyber:
     st.subheader("Configuración de Promociones")
     
